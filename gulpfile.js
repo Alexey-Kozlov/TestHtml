@@ -6,6 +6,9 @@ var plumber = require('gulp-plumber');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 var imagemin = require('gulp-imagemin');
+var rename = require('gulp-rename');
+var posthtml = require('gulp-posthtml');
+var include = require('posthtml-include');
 
 gulp.task('style',function(){
 	gulp.src('./less/style.less')
@@ -14,7 +17,9 @@ gulp.task('style',function(){
 	.pipe(postcss([
 		autoprefixer()
 	]))
+	.pipe(gulp.dest('./css/'))
 	.pipe(csso())
+	.pipe(rename('style.min.css'))
 	.pipe(gulp.dest('./css/'))
 	.pipe(server.stream());
 
@@ -25,11 +30,16 @@ gulp.task('style',function(){
 		imagemin.svgo()
 	]))
 	.pipe(gulp.dest('./images'))
+
+	gulp.src('./src/*.html')
+	.pipe(posthtml( [include({ encoding: 'utf8' })] ))
+	.pipe(gulp.dest('.'))
 });
 
 gulp.task('serve',['style'], function(){
 	server.init({
-		server:'.'
+		server:'.',
+		browser: 'firefox'
 	});
 	gulp.watch('./**/*.less',['style']);
 	gulp.watch('*.html').on('change', server.reload);
