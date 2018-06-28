@@ -1,0 +1,17 @@
+﻿@mywidth: 100px;
+
+.wrapper {
+	width:@mywidth;
+	color:black;
+	border: solid 1px blue;
+	&-test{
+		border: solid 1px red;
+		width:@mywidth + 200;
+	}
+}
+
+.wrapper > .myclass {
+	width: @mywidth;
+	color:red;
+	font-size:34px;
+}
