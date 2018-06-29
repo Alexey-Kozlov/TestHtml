@@ -36,11 +36,19 @@ gulp.task('style',function(){
 	.pipe(gulp.dest('.'))
 });
 
+gulp.task('compile_html',function(){	
+	gulp.src('./src/*.html')
+	.pipe(posthtml( [include({ encoding: 'utf8' })] ))
+	.pipe(gulp.dest('.'));
+	server.reload();
+});
+
 gulp.task('serve',['style'], function(){
 	server.init({
 		server:'.',
-		browser: 'firefox'
+		browser: 'chrome'
 	});
 	gulp.watch('./**/*.less',['style']);
-	gulp.watch('*.html').on('change', server.reload);
+	gulp.watch('./src/*.html',['compile_html'] );
+
 }); 
